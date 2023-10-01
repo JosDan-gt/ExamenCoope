@@ -12,16 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id('id_users');
-            $table->string('user_name');
-            $table->string('correo');
+            $table->id('id');
+            $table->string('user_name')->notnull();
+            $table->string('correo')->notnull();
             $table->timestamp('correo_verified_at')->nullable();
-            $table->string('contrasena');
+            $table->string('contrasena')->notnull();
             $table->rememberToken();
             $table->timestamps();
         });
     }
-    
+
 
     /**
      * Reverse the migrations.
