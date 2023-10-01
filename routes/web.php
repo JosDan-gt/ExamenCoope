@@ -18,6 +18,9 @@ Route::view('/login', "login")->name('login');
 Route::view('/registro', "register")->name('registro');
 Route::view('/privada', "secret")->middleware('auth')->name('privada');
 Route::view('/Vista_empleados', "Vista_empleados")->name('Vista_empleados');
+Route::view('/clientes', "clientes")->name('clientes');
+
+
 
 Route::post('/validar-registro',[LoginController::class,'register'])->name('validar-registro');
 Route::post('/iniciar-sesion',[LoginController::class,'login'])->name('iniciar-sesion');
