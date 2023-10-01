@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('estado_civ')->nullable();
             $table->timestamps();
 
-            $table->foreign('id_users')->references('id_users')->on('usuarios');
+            $table->foreign('id_users')->references('id_users')->on('users');
         });
     }
 
