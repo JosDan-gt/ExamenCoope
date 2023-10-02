@@ -36,7 +36,7 @@ function LlamarCliente() {
                 th1.innerText = clientes.id_cli;
 
                 var td1 = document.createElement("td");
-                td1.innerText = clientes.Cod_Asociado;
+                td1.innerText = clientes.cod_asociado;
 
                 var td2 = document.createElement("td");
                 td2.innerText = clientes.id_users;
@@ -46,7 +46,7 @@ function LlamarCliente() {
 
                 var td4 = document.createElement("td");
                 td4.innerText = clientes.apellido1;
-                
+
                 var td5 = document.createElement("td");
                 td5.innerText = clientes.apellido2;
 
@@ -58,7 +58,7 @@ function LlamarCliente() {
 
                 var td8 = document.createElement("td");
                 td8.innerText = clientes.fecha_nac;
-                
+
                 var td9 = document.createElement("td");
                 td9.innerText = clientes.estado_civ;
 
@@ -112,6 +112,8 @@ function LlamarCliente() {
 }
 
 
+
+
 function modificarClientes(clientes) {
     // Muestra el modal de edición
     var modal = new bootstrap.Modal(document.getElementById('modClientes'));
@@ -133,4 +135,101 @@ function modificarClientes(clientes) {
     guardarBtn.addEventListener('click', function () {
         guardarClienteModificado(clientes);
     });
+}
+
+function guardarClienteModificado(clientes) {
+    var codigoasociado = document.getElementById('codasociadoMod').value;
+    var iduser = document.getElementById('idUserMod').value;
+    var nombrecliente = document.getElementById('nombreClienteMod').value;
+    var apellido1 = document.getElementById('apellido1Mod').value;
+    var apellido2 = document.getElementById('apellido2Mod').value;
+    var dpicliente = document.getElementById('dpiMod').value;
+    var sexoCli = document.getElementById('sexoMod').value;
+    var direccionCliente = document.getElementById('direccionClienteMod').value;
+    var fechaNacimiento = document.getElementById('fechaNacMod').value;
+    var estaadoCivil = document.getElementById('estadoCivilMod').value;
+
+    var clienteFinal = {
+        "id_cli": clientes.id_cli,
+        "cod_asociado": codigoasociado,
+        "id_users": iduser,
+        "nombre": nombrecliente,
+        "apellido1": apellido1,
+        "apellido2": apellido2,
+        "dpi": dpicliente,
+        "sexo": sexoCli,
+        "direccion": direccionCliente,
+        "fecha_nac": fechaNacimiento,
+        "estado_civ": estaadoCivil,
+
+
+    };
+
+    // Encuentra la fila correspondiente al Cliente en la tabla
+    var table = document.querySelector(".table");
+    var rows = table.querySelectorAll("tbody tr");
+    var targetRow = null;
+    for (var i = 0; i < rows.length; i++) {
+        var codigoClientes = rows[i].querySelector("th").innerText;
+        if (codigoClientes === clientes.id_cli) {
+            targetRow = rows[i];
+            break;
+        }
+    }
+
+    // Realiza la solicitud PUT para actualizar el Cliente en la base de datos
+    var urlActualizacion = url + clientes.id_cli;
+
+    fetch(urlActualizacion, {
+        method: 'PUT',
+        body: JSON.stringify(clienteFinal),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+
+        .then(res => res.json())
+        .then(data => {
+            // Cierra el modal después de guardar
+            var modal = new bootstrap.Modal(document.getElementById('modClientes'));
+            modal.hide();
+
+            // Muestra un mensaje de éxito después de cerrar el modal
+            alert("Cliente modificado correctamente");
+
+            // Actualiza la tabla
+            LlamarCliente();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Ocurrió un error al modificar el Cliente");
+        });
+}
+
+
+function DeleteClientes(id_cli) {
+    const confirmacion = confirm("¿Estás seguro de que deseas eliminar este cliente?");
+
+    if (confirmacion) {
+        var urlEliminacion = url + id_cli; // Construye la URL completa para eliminar el cliente
+
+        fetch(urlEliminacion, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(res => {
+                if (res.status === 200) {
+                    console.log('Cliente eliminado correctamente');
+                    // Llama a la función para actualizar la tabla
+                    LlamarCliente();
+                } else {
+                    console.error('Error al eliminar el cliente:', res.status);
+                }
+            })
+            .catch(error => {
+                console.error('Error al eliminar el cliente:', error);
+            });
+    }
 }
